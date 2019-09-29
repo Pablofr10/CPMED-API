@@ -1,0 +1,13 @@
+{
+  "name": "cpmed-api",
+  "version": "1.0.0",
+  "description": "Api CPMED",
+  "main": "index.js",
+  "keywords": [],
+  "author": "Pablo Rafael",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^7.12.1"
+  }
+}
