@@ -7,8 +7,9 @@ const pool = new Pool({
   port: 5432,
 })
 
+// Tabela Pacientes
 const getUsers = (request, response) => {
-    pool.query('SELECT * FROM tb_pacientes ORDER BY nome_completo ASC', (error, results) => {
+    pool.query('SELECT * FROM pacientes ORDER BY nome ASC ', (error, results) => {
       if (error) {
         throw error
       }
@@ -17,9 +18,9 @@ const getUsers = (request, response) => {
   }
 
   const getUserById = (request, response) => {
-    const cod_paciente = parseInt(request.params.cod_paciente)
+    const cod_paciente = request.params.cod_paciente;
   
-    pool.query('SELECT * FROM tb_pacientes WHERE cod_paciente = $1', [cod_paciente], (error, results) => {
+    pool.query(`SELECT * FROM tb_paciente WHERE cod_paciente = ${cod_paciente}`, (error, results) => {
       if (error) {
         throw error
       }
@@ -27,24 +28,22 @@ const getUsers = (request, response) => {
     })
   }
   
-  const createUser = (request, response) => {
-    const { name, email } = request.body
-  
-    pool.query('INSERT INTO tb_pacientes (name, email) VALUES ($1, $2)', [name, email], (error, results) => {
-      if (error) {
-        throw error
-      }
-      response.status(201).send(`Paciente criado com o código: ${result.insertcod_paciente}`)
-    })
+  const createUser = async (request, response) => {
+    const { id_paciente, nome, cpf, dt_nascimento, telefone, endereco, id_sexo_sexo } = request.body;
+
+
+      await pool.query(`INSERT INTO pacientes (id_paciente, nome, cpf, dt_nascimento, telefone, endereco, id_sexo_sexo) VALUES ($1, $2, $3, $4, $5, $6, $7)`, [id_paciente, nome, cpf, dt_nascimento, telefone, endereco, id_sexo_sexo])
+      .then(() => response.status(201).send())
+      .catch(({ message }) => response.status(500).send({ message }));
+   
   }
-  
+ 
   const updateUser = (request, response) => {
     const cod_paciente = parseInt(request.params.cod_paciente)
-    const { name, email } = request.body
+    const { nome, cpf, dt_nascimento, telefone, endereco } = request.body
   
     pool.query(
-      'UPDATE tb_pacientes SET name = $1, email = $2 WHERE cod_paciente = $3',
-      [name, email, cod_paciente],
+      `UPDATE tb_paciente SET nome = ${nome}, email = $2 WHERE cod_paciente = $3`,
       (error, results) => {
         if (error) {
           throw error
@@ -57,13 +56,35 @@ const getUsers = (request, response) => {
   const deleteUser = (request, response) => {
     const cod_paciente = parseInt(request.params.cod_paciente)
   
-    pool.query('DELETE FROM tb_pacientes WHERE cod_paciente = $1', [cod_paciente], (error, results) => {
+    pool.query('DELETE FROM tb_paciente WHERE cod_paciente = $1', [cod_paciente], (error, results) => {
       if (error) {
         throw error
       }
       response.status(200).send(`User deleted with cod_paciente: ${cod_paciente}`)
     })
   }
+
+  // Tabela Histórico
+
+  const getHistorico = (request, response) => {
+    pool.query('SELECT * FROM tb_historico_pacientes ', (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).json(results.rows)
+    })
+  }  
+
+  const getHistoricoById = (request, response) => {
+    const cod_paciente = request.params.cod_paciente;
+  
+    pool.query(`SELECT * FROM tb_historico_pacientes WHERE cod_paciente = ${cod_paciente}`, (error, results) => {
+      if (error) {
+        throw error
+      }
+      response.status(200).json(results.rows)
+    })
+  } 
   
   module.exports = {
     getUsers,
@@ -71,4 +92,6 @@ const getUsers = (request, response) => {
     createUser,
     updateUser,
     deleteUser,
+    getHistorico,
+    getHistoricoById
   }

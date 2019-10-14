@@ -13,10 +13,12 @@ app.use(
 );
 
 app.get('/users', db.getUsers)
-app.get('/users/:id', db.getUserById)
+app.get('/users/:cod_paciente', db.getUserById)
 app.post('/users', db.createUser)
 app.put('/users/:id', db.updateUser)
 app.delete('/users/:id', db.deleteUser)
+app.get('/historico', db.getHistorico)
+app.get('/historico/:cod_paciente', db.getHistoricoById)
 
 app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API' })
