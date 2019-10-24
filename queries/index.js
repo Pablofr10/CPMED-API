@@ -66,23 +66,25 @@ const getUsers = (request, response) => {
 
   // Tabela Histórico
 
-  const getHistorico = (request, response) => {
-    pool.query('SELECT * FROM tb_historico_pacientes ', (error, results) => {
+/*   const getHistorico = (request, response) => {
+    pool.query('SELECT * FROM historico', (error, results) => {
       if (error) {
         throw error
       }
       response.status(200).json(results.rows)
     })
-  }  
+  }   */
 
   const getHistoricoById = (request, response) => {
-    const cod_paciente = request.params.cod_paciente;
+    //const cod_paciente = request.params.cod_paciente;
   
-    pool.query(`SELECT * FROM tb_historico_pacientes WHERE cod_paciente = ${cod_paciente}`, (error, results) => {
-      if (error) {
+    pool.query(`SELECT * FROM tb_historico as H INNER JOIN tb_agendamento as A ON h.id_historico = a.id_historico_fk INNER JOIN tb_profissional as P ON p.id_profissional = a.id_profissional_fk`, (error, results) => {
+      try {
+        response.status(200).json(results.rows)
+      } catch (error) {
         throw error
       }
-      response.status(200).json(results.rows)
+      
     })
   } 
   
@@ -92,6 +94,6 @@ const getUsers = (request, response) => {
     createUser,
     updateUser,
     deleteUser,
-    getHistorico,
+    //getHistorico,
     getHistoricoById
   }
