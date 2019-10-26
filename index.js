@@ -13,11 +13,11 @@ app.use(
 );
 
 app.get('/users', db.getUsers)
-app.get('/users/:cod_paciente', db.getUserById)
-app.post('/users', db.createUser)
-app.put('/users/:id', db.updateUser)
+app.get('/users/:id_paciente', db.getUserById)
+/* app.post('/users', db.createUser)
+app.put('/users/:id', db.updateUser) 
 app.delete('/users/:id', db.deleteUser)
-//app.get('/historico', db.getHistorico)
+app.get('/historico', db.getHistorico)*/
 app.get('/historico', db.getHistoricoById)
 
 app.get('/', (request, response) => {
